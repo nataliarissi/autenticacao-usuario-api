@@ -1,8 +1,7 @@
 ﻿namespace UserAuthenticationAPI.DbContextRepository.Models
 {
-    public class Person
+    public class Person : AbstractTable
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int Cpf { get; set; }
         public string Email { get; set; }

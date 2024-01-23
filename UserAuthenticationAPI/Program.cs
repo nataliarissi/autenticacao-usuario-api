@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using UserAuthenticationAPI.Services;
+using UserAuthenticationAPI.Services.Implementations;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
 
@@ -13,12 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IGroupServices, GroupServices>();
-builder.Services.AddScoped<IPersonServices, PersonServices>();
-builder.Services.AddScoped<IGroupServices, GroupServices>();
+builder.Services.AddScoped<IGroupsService, GroupsService>();
+builder.Services.AddScoped<IPeopleService, PeopleService>();
+builder.Services.AddScoped<IGroupsService, GroupsService>();
 
 var connectionString = builder.Configuration.GetConnectionString("USERMANAGEMENT");
-builder.Services.AddDbContext<AuthenticationDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AuthenticationDbContext>();
 
 var app = builder.Build();
 

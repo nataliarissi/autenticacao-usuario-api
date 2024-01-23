@@ -1,6 +1,6 @@
 ﻿namespace UserAuthenticationAPI.Services.Interfaces
 {
-    public interface IGroupServices
+    public interface IPeopleService
     {
     }
 }

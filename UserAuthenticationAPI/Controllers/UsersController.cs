@@ -5,7 +5,7 @@ namespace UserAuthenticationAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GroupController : ControllerBase
+    public class UsersController : ControllerBase
     {
     }
 }

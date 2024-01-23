@@ -1,12 +1,12 @@
 ﻿using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
 
-namespace UserAuthenticationAPI.Services
+namespace UserAuthenticationAPI.Services.Implementations
 {
-    public class UserServices : IUserServices
+    public class PeopleService : IPeopleService
     {
         private readonly AuthenticationDbContext _dbContext;
-        public UserServices(AuthenticationDbContext dbContext)
+        public PeopleService(AuthenticationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
