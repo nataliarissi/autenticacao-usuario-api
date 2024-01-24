@@ -1,4 +1,6 @@
-﻿namespace UserAuthenticationAPI.DbContextRepository.Models
+﻿using UserAuthenticationAPI.DbContextRepository.Models.Users;
+
+namespace UserAuthenticationAPI.DbContextRepository.Models.Groups
 {
     public class Group : AbstractTable
     {

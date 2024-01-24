@@ -7,6 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DbContextRepository\Models\NovaPasta1\**" />
+    <Compile Remove="DbContextRepository\Models\NovaPasta\**" />
+    <Compile Remove="NovaPasta\**" />
+    <Content Remove="DbContextRepository\Models\NovaPasta1\**" />
+    <Content Remove="DbContextRepository\Models\NovaPasta\**" />
+    <Content Remove="NovaPasta\**" />
+    <EmbeddedResource Remove="DbContextRepository\Models\NovaPasta1\**" />
+    <EmbeddedResource Remove="DbContextRepository\Models\NovaPasta\**" />
+    <EmbeddedResource Remove="NovaPasta\**" />
+    <None Remove="DbContextRepository\Models\NovaPasta1\**" />
+    <None Remove="DbContextRepository\Models\NovaPasta\**" />
+    <None Remove="NovaPasta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.15" />

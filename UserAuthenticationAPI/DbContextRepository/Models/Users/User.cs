@@ -1,4 +1,6 @@
-﻿namespace UserAuthenticationAPI.DbContextRepository.Models
+﻿using UserAuthenticationAPI.DbContextRepository.Models.Groups;
+
+namespace UserAuthenticationAPI.DbContextRepository.Models.Users
 {
     public class User : AbstractTable
     {
@@ -8,5 +10,6 @@
         public int IdPerson { get; set; }
         public int IdGroup { get; set; }
         public Group Group { get; set; }
+        public List<Group> Groups { get; set; }
     }
 }
