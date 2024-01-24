@@ -39,7 +39,15 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                _dbContext.RegistrationPeople.Add(registrationPerson);
+                Person person = new Person();
+
+                person.Name = registrationPerson.Name;
+                person.Cpf = registrationPerson.Cpf;
+                person.Email = registrationPerson.Email;
+                person.DDD = registrationPerson.DDD;
+                person.Number = registrationPerson.Number;
+
+                _dbContext.People.Add(person);
 
                 var queryResult = _dbContext.SaveChanges();
 
@@ -58,7 +66,15 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                _dbContext.UpdatePeople.Update(updatePerson);
+                Person person = new Person();
+
+                person.Name = updatePerson.Name;
+                person.Cpf = updatePerson.Cpf;
+                person.Email = updatePerson.Email;
+                person.DDD = updatePerson.DDD;
+                person.Number = updatePerson.Number;
+
+                _dbContext.People.Update(person);
 
                 var queryResult = _dbContext.SaveChanges();
 

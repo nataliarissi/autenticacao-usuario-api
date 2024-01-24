@@ -38,7 +38,15 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                _dbContext.RegistrationUsers.Add(registrationUser);
+                User user = new User();
+
+                user.UserLogin = registrationUser.UserLogin;
+                user.Password = registrationUser.Password;
+                user.DaysRenewal = registrationUser.DaysRenewal;
+                user.IdPerson = registrationUser.IdPerson;
+                user.IdGroup = registrationUser.IdGroup;
+
+                _dbContext.Users.Add(user);
 
                 var queryResult = _dbContext.SaveChanges();
 
@@ -52,11 +60,18 @@ namespace UserAuthenticationAPI.Services.Implementations
                 return new Return<bool>("Error" + ex.Message);
             }
         }
+
         public Return<bool> UpdateUserRequest([FromBody] UpdateUser updateUser)
         {
             try
             {
-                _dbContext.UpdateUsers.Update(updateUser);
+                User user = new User();
+
+                user.UserLogin = updateUser.UserLogin;
+                user.Password = updateUser.Password;
+                user.DaysRenewal = updateUser.DaysRenewal;
+
+                _dbContext.Users.Update(user);
 
                 var queryResult = _dbContext.SaveChanges();
 

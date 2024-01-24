@@ -9,7 +9,6 @@ namespace UserAuthenticationAPI.DbContextRepository.Models.Users
         public int DaysRenewal { get; set; }
         public int IdPerson { get; set; }
         public int IdGroup { get; set; }
-        public Group Group { get; set; }
-        public List<Group> Groups { get; set; }
+        public List<UserGroup> UserGroup { get; set; }
     }
 }

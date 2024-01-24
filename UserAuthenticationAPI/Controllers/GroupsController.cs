@@ -6,7 +6,7 @@ using UserAuthenticationAPI.Services.Interfaces;
 
 namespace UserAuthenticationAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/groups")]
     [ApiController]
     public class GroupsController : ControllerBase
     {
@@ -43,7 +43,7 @@ namespace UserAuthenticationAPI.Controllers
 
         }
 
-        [HttpGet("getAllGroups")]
+        [HttpGet]
         public Return<List<Group?>> GetAllGroups()
         {
             return _groupService.GetAllGroups();

@@ -8,7 +8,7 @@ using UserAuthenticationAPI.DbContextRepository.Models.Users;
 
 namespace UserAuthenticationAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -45,7 +45,7 @@ namespace UserAuthenticationAPI.Controllers
 
         }
 
-        [HttpGet("getAllUsers")]
+        [HttpGet]
         public Return<List<User?>> GetAllUsers()
         {
             return _userService.GetAllUsers();

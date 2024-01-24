@@ -8,7 +8,7 @@ using UserAuthenticationAPI.Services.Interfaces;
 
 namespace UserAuthenticationAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/people")]
     [ApiController]
     public class PeopleController : ControllerBase
     {
@@ -45,7 +45,7 @@ namespace UserAuthenticationAPI.Controllers
 
         }
 
-        [HttpGet("getAllPeople")]
+        [HttpGet]
         public Return<List<Person?>> GetAllPeople()
         {
             return _peopleService.GetAllPeople();

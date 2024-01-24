@@ -38,7 +38,12 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                _dbContext.RegistrationGroups.Add(registrationGroup);
+                Group group = new Group();
+
+                group.Name = registrationGroup.Name;
+                group.Description = registrationGroup.Description;
+
+                _dbContext.Groups.Add(group);
 
                 var queryResult = _dbContext.SaveChanges();
 
@@ -57,7 +62,12 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                _dbContext.UpdateGroups.Update(updateGroup);
+                Group group = new Group();
+
+                group.Name = updateGroup.Name;
+                group.Description = updateGroup.Description;
+
+                _dbContext.Groups.Update(group);
 
                 var queryResult = _dbContext.SaveChanges();
 
@@ -76,9 +86,9 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                var groups = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
+                var group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
 
-                _dbContext.Groups.Remove(groups);
+                _dbContext.Groups.Remove(group);
 
                 var queryResult = _dbContext.SaveChanges();
 
