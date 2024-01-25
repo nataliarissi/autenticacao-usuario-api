@@ -22,10 +22,8 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Person? person = _dbContext.People.FirstOrDefault(x => x.Id == id);
 
-                var queryResult = _dbContext.SaveChanges();
-
-                if (queryResult == 0)
-                    return new Return<Person?>("Error when finding person by ID");
+                if (person == null)
+                    throw new Exception("ID does not exist");
 
                 return new Return<Person?>(person);
             }
@@ -35,10 +33,15 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<bool> RegistrationPeopleRequest([FromBody] RegistrationPerson registrationPerson)
+        public Return<bool> RegistrationPersonRequest([FromBody] RegistrationPerson registrationPerson)
         {
             try
             {
+                var personExists = _dbContext.People.Any(person => person.Name == registrationPerson.Name);
+
+                if (personExists)
+                    return new Return<bool>("Person with the same name already exists");
+
                 Person person = new Person();
 
                 person.Name = registrationPerson.Name;
@@ -68,8 +71,10 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Person person = new Person();
 
+                if (person.Name == updatePerson.Name)
+                    return new Return<bool>("Person with the same name already exists");
+
                 person.Name = updatePerson.Name;
-                person.Cpf = updatePerson.Cpf;
                 person.Email = updatePerson.Email;
                 person.DDD = updatePerson.DDD;
                 person.Number = updatePerson.Number;
@@ -94,6 +99,9 @@ namespace UserAuthenticationAPI.Services.Implementations
             try
             {
                 var person = _dbContext.People.FirstOrDefault(x => x.Id == id);
+
+                if (person == null)
+                    return new Return<bool>("ID not found");
 
                 _dbContext.People.Remove(person);
 

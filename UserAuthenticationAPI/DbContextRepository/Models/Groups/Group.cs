@@ -6,6 +6,6 @@ namespace UserAuthenticationAPI.DbContextRepository.Models.Groups
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<UserGroup> UserGroup { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace UserAuthenticationAPI.DbContextRepository.Models.Users
 {
-    public class RegistrationUser : AbstractTable
+    public class RegistrationUser
     {
         public string UserLogin { get; set; }
         public string Password { get; set; }

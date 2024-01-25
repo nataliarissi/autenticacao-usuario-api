@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
 using UserAuthenticationAPI.Services.Interfaces;
@@ -21,10 +22,8 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Group? group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
 
-                var queryResult = _dbContext.SaveChanges();
-
-                if (queryResult == 0)
-                    return new Return<Group?>("Error when finding group by ID");
+                if (group == null)
+                    return new Return<Group?>("ID does not exist");
 
                 return new Return<Group?>(group);
             }
@@ -38,6 +37,11 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
+                var groupExists = _dbContext.Groups.Any(group => group.Name == registrationGroup.Name);
+
+                if (groupExists)
+                    return new Return<bool>("Group with the same name already exists");
+
                 Group group = new Group();
 
                 group.Name = registrationGroup.Name;
@@ -64,6 +68,9 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Group group = new Group();
 
+                if (group.Name == updateGroup.Name)
+                    return new Return<bool>("Group with the same name already exists");
+
                 group.Name = updateGroup.Name;
                 group.Description = updateGroup.Description;
 
@@ -87,6 +94,9 @@ namespace UserAuthenticationAPI.Services.Implementations
             try
             {
                 var group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
+
+                if (group == null)
+                    return new Return<bool>("ID not found");
 
                 _dbContext.Groups.Remove(group);
 

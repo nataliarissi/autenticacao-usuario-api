@@ -1,6 +1,6 @@
 ﻿namespace UserAuthenticationAPI.DbContextRepository.Models.People
 {
-    public class RegistrationPerson : AbstractTable
+    public class RegistrationPerson
     {
         public string Name { get; set; }
         public string Cpf { get; set; }

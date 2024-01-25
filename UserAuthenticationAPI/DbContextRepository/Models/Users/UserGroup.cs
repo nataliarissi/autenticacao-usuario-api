@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using UserAuthenticationAPI.DbContextRepository.Models.Groups;
 
 namespace UserAuthenticationAPI.DbContextRepository.Models.Users
 {

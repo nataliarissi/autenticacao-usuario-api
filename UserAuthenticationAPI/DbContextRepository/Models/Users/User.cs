@@ -1,4 +1,5 @@
 ﻿using UserAuthenticationAPI.DbContextRepository.Models.Groups;
+using UserAuthenticationAPI.DbContextRepository.Models.People;
 
 namespace UserAuthenticationAPI.DbContextRepository.Models.Users
 {
@@ -9,6 +10,7 @@ namespace UserAuthenticationAPI.DbContextRepository.Models.Users
         public int DaysRenewal { get; set; }
         public int IdPerson { get; set; }
         public int IdGroup { get; set; }
-        public List<UserGroup> UserGroup { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
+        public Person Person { get; set; }
     }
 }

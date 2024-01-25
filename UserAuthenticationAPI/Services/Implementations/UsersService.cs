@@ -4,6 +4,8 @@ using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
 using UserAuthenticationAPI.DbContextRepository.Models.People;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using UserAuthenticationAPI.DbContextRepository.Models.Groups;
 
 namespace UserAuthenticationAPI.Services.Implementations
 {
@@ -21,10 +23,8 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 User? user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
 
-                var queryResult = _dbContext.SaveChanges();
-
-                if (queryResult == 0)
-                    return new Return<User?>("Error when finding user by ID");
+                if (user == null)
+                    return new Return<User?>("ID does not exist");
 
                 return new Return<User?>(user);
             }
@@ -38,11 +38,15 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
+                var userExists = _dbContext.Users.Any(user => user.UserLogin == registrationUser.UserLogin);
+
+                if (userExists)
+                    return new Return<bool>("User with the same login already exists");
+
                 User user = new User();
 
                 user.UserLogin = registrationUser.UserLogin;
                 user.Password = registrationUser.Password;
-                user.DaysRenewal = registrationUser.DaysRenewal;
                 user.IdPerson = registrationUser.IdPerson;
                 user.IdGroup = registrationUser.IdGroup;
 
@@ -67,9 +71,11 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 User user = new User();
 
+                if (user.UserLogin == updateUser.UserLogin)
+                    return new Return<bool>("This login already exists");
+
                 user.UserLogin = updateUser.UserLogin;
                 user.Password = updateUser.Password;
-                user.DaysRenewal = updateUser.DaysRenewal;
 
                 _dbContext.Users.Update(user);
 
@@ -91,6 +97,9 @@ namespace UserAuthenticationAPI.Services.Implementations
             try
             {
                 var user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
+
+                if (user == null)
+                    return new Return<bool>("ID not found");
 
                 _dbContext.Users.Remove(user);
 

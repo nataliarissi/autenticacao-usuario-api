@@ -27,9 +27,9 @@ namespace UserAuthenticationAPI.Controllers
         }
 
         [HttpPost]
-        public Return<bool> RegistrationPeopleRequest([FromBody] RegistrationPerson registrationPerson)
+        public Return<bool> RegistrationPersonRequest([FromBody] RegistrationPerson registrationPerson)
         {
-            return _peopleService.RegistrationPeopleRequest(registrationPerson);
+            return _peopleService.RegistrationPersonRequest(registrationPerson);
         }
 
         [HttpPut]

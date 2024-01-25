@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection.Emit;
 using System.Reflection.Metadata;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
 using UserAuthenticationAPI.DbContextRepository.Models.People;
@@ -19,30 +20,16 @@ namespace UserAuthenticationAPI.UserDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Group>(
-                b =>
-                {
-                    b.HasMany(x => x.UserGroup)
-                    .WithOne(x => x.User);
-                    b.HasKey(x => x.Id);
-                    b.Property(x => x.Name).HasMaxLength(100);
-                });
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(x => x.User)
+                .WithMany(y => y.UserGroups)
+                .HasForeignKey(y => y.IdUser)
+                .IsRequired();
 
-                //.HasKey(x => x.Id)
-                //.Property(x => x.)
-                //.IsRequired();
-
-            //modelBuilder.Entity<Person>()
-            //    .HasOne(x => x.User)
-            //    .WithManyx => x.Groups)
-            //    .HasForeignKey(x => x.IdPerson)
-            //    .HasPrincipalKey(x => x.Id);
-
-            modelBuilder.Entity<User>()
-                .HasMany(x => x.UserGroup)
-                .WithOne(x => x.Group)
-                .HasForeignKey(x => x.IdGroup)
-                .HasPrincipalKey(x => x.Id)
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(x => x.Group)
+                .WithMany(y => y.UserGroups)
+                .HasForeignKey(y => y.IdGroup)
                 .IsRequired();
         }
     }
