@@ -51,7 +51,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when registering the group");
 
                 return new Return<bool>(queryResult > 0);

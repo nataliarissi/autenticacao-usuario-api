@@ -1,6 +1,6 @@
 ﻿namespace UserAuthenticationAPI.DbContextRepository.Models.People
 {
-    public class UpdatePerson : AbstractTable
+    public class UpdatePerson
     {
         public string Name { get; set; }
         public string Email { get; set; }

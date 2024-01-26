@@ -10,13 +10,27 @@ namespace UserAuthenticationAPI.UserDbContext
 {
     public class AuthenticationDbContext : DbContext
     {
+        public AuthenticationDbContext(DbContextOptions<AuthenticationDbContext> options)
+            : base(options)
+        {
+
+        }
+
         public DbSet<Group> Groups { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Person> People { get; set; } = null!;
         public DbSet<UserGroup> UserGroups { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-    => options.UseSqlServer("USERMANAGEMENT");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=USERMANAGEMENT;User ID=sa;Password=Natalia@123; TrustServerCertificate=True");
+        }
+        //    protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //=> options.UseSqlServer("USERMANAGEMENT");
+
+        //        "ConnectionStrings": {
+        //  "USERMANAGEMENT": "Data Source=.;Initial Catalog=USERMANAGEMENT;User ID=sa;Password=Natalia@123"
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

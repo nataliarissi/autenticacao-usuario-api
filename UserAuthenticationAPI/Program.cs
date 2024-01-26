@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using UserAuthenticationAPI.Services.Implementations;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
@@ -15,12 +16,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IGroupsService, GroupsService>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
-builder.Services.AddScoped<IGroupsService, GroupsService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 
-var connectionString = builder.Configuration.GetConnectionString("USERMANAGEMENT");
 builder.Services.AddDbContext<AuthenticationDbContext>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AuthenticationDbContext>();
+
+    context.Database.EnsureCreated();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

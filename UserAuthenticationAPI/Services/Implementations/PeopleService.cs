@@ -33,7 +33,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<bool> RegistrationPersonRequest([FromBody] RegistrationPerson registrationPerson)
+        public Return<bool> RegistrationPersonRequest(RegistrationPerson registrationPerson)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<bool> UpdatePersonRequest([FromBody] UpdatePerson updatePerson)
+        public Return<bool> UpdatePersonRequest(UpdatePerson updatePerson)
         {
             try
             {
