@@ -44,9 +44,9 @@ namespace UserAuthenticationAPI.Controllers
         }
 
         [HttpGet]
-        public Return<List<Group?>> GetAllGroups()
+        public Return<Pagination> GetAllGroups(int page)
         {
-            return _groupService.GetAllGroups();
+            return _groupService.GetAllGroups(page);
         }
     }
 }

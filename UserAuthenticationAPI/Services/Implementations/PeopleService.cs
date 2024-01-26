@@ -125,11 +125,6 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 var queryAllPeople = _dbContext.People.ToList();
 
-                var queryResult = _dbContext.SaveChanges();
-
-                if (queryResult == 0)
-                    return new Return<List<Person?>>("Error when finding all people");
-
                 return new Return<List<Person?>>(queryAllPeople);
             }
             catch (Exception ex)

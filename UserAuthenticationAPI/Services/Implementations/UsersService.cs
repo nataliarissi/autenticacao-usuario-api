@@ -123,11 +123,6 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 var queryAllUsers = _dbContext.Users.ToList();
 
-                var queryResult = _dbContext.SaveChanges();
-
-                if (queryResult == 0)
-                    return new Return<List<User?>>("Error when finding all users");
-
                 return new Return<List<User?>>(queryAllUsers);
             }
             catch (Exception ex)

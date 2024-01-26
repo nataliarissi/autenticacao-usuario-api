@@ -10,6 +10,6 @@ namespace UserAuthenticationAPI.Services.Interfaces
         Return<bool> RegistrationGroupRequest(RegistrationGroup registrationGroup);
         Return<bool> UpdateGroupRequest(UpdateGroup updateGroup);
         Return<bool> RemoveGroupRequest(int id);
-        Return<List<Group?>> GetAllGroups();
+        Return<Pagination> GetAllGroups(int page);
     }
 }

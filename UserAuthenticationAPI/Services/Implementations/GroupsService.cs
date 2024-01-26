@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using UserAuthenticationAPI.DbContextRepository.Models;
@@ -68,9 +69,17 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Group group = new Group();
 
-                if (group.Name == updateGroup.Name)
+                var idExists = _dbContext.Groups.Any(i => i.Id == updateGroup.Id);
+
+                if(!idExists)
+                    return new Return<bool>("Id does not exist");
+
+                var nameAlreadyRegistered = _dbContext.Groups.Any(n => n.Name == updateGroup.Name && n.Id != updateGroup.Id);
+
+                if (nameAlreadyRegistered)
                     return new Return<bool>("Group with the same name already exists");
 
+                group.Id = updateGroup.Id;
                 group.Name = updateGroup.Name;
                 group.Description = updateGroup.Description;
 
@@ -78,7 +87,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when updating the group");
 
                 return new Return<bool>(queryResult > 0);
@@ -93,17 +102,16 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                var group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
+                 var group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
 
-                if (group == null)
+                if (id <= 0)
                     return new Return<bool>("ID not found");
 
                 _dbContext.Groups.Remove(group);
 
                 var queryResult = _dbContext.SaveChanges();
 
-
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when removing the group");
 
                 return new Return<bool>(true);
@@ -115,22 +123,33 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<List<Group?>> GetAllGroups()
+        public Return<Pagination> GetAllGroups(int page)
         {
             try
             {
-                var queryAllGroups = _dbContext.Groups.ToList();
+                if (_dbContext.Groups == null)
+                    return new Return<Pagination>("Error");
 
-                var queryResult = _dbContext.SaveChanges();
+                var pageResults = 3f;
+                var pageCount = Math.Ceiling(_dbContext.Groups.Count() / pageResults);
 
-                if (queryResult == 0)
-                    return new Return<List<Group?>>("Error when finding all groups");
+                var groups = _dbContext.Groups
+                    .Skip((page - 1) * (int)pageResults)
+                    .Take((int)pageResults)
+                    .ToList();
 
-                return new Return<List<Group?>>(queryAllGroups);
+                var result = new Pagination
+                {
+                    Groups = groups,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new Return<Pagination>(result);
             }
             catch (Exception ex)
             {
-                return new Return<List<Group?>>("Error" + ex.Message);
+                return new Return<Pagination>("Error" + ex.Message);
             }
         }
     }
