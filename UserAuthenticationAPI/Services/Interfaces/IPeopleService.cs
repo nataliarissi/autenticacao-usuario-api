@@ -2,7 +2,7 @@
 using UserAuthenticationAPI.DbContextRepository.Models;
 using Microsoft.AspNetCore.Mvc;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
-using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
+using UserAuthenticationAPI.DbContextRepository;
 
 namespace UserAuthenticationAPI.Services.Interfaces
 {
@@ -12,6 +12,6 @@ namespace UserAuthenticationAPI.Services.Interfaces
         Return<bool> RegistrationPersonRequest(RegistrationPerson registrationPerson);
         Return<bool> UpdatePersonRequest(UpdatePerson updatePerson);
         Return<bool> RemovePersonRequest(int id);
-        Return<PaginationRequestPerson<Person>> GetAllPeople(int page, int pageSize);
+        Return<Pagination<Person>> GetAllPeople(int page, int pageSize);
     }
 }

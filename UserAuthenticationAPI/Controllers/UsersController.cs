@@ -5,6 +5,7 @@ using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.Services.Implementations;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.DbContextRepository.Models.Users;
+using UserAuthenticationAPI.DbContextRepository;
 
 namespace UserAuthenticationAPI.Controllers
 {
@@ -46,9 +47,9 @@ namespace UserAuthenticationAPI.Controllers
         }
 
         [HttpGet]
-        public Return<List<User?>> GetAllUsers()
+        public Return<Pagination<User>> GetAllUsers(int page, int pageSize)
         {
-            return _userService.GetAllUsers();
+            return _userService.GetAllUsers(page, pageSize);
         }
     }
 }

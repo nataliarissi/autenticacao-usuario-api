@@ -5,7 +5,7 @@ using UserAuthenticationAPI.UserDbContext;
 using Microsoft.AspNetCore.Mvc;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
 using Microsoft.EntityFrameworkCore;
-using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
+using UserAuthenticationAPI.DbContextRepository;
 
 namespace UserAuthenticationAPI.Services.Implementations
 {
@@ -143,10 +143,13 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<PaginationRequestPerson<Person>> GetAllPeople(int page, int pageSize)
+        public Return<Pagination<Person>> GetAllPeople(int page, int pageSize)
         {
             try
             {
+                if (_dbContext.People == null)
+                    return new Return<Pagination<Person>>("Error");
+
                 var pagingModel = _dbContext.People
                 .OrderBy(n => n.Id)
                 .Skip((page - 1) * pageSize)
@@ -156,13 +159,13 @@ namespace UserAuthenticationAPI.Services.Implementations
                 var totalPeople= _dbContext.People.Count();
                 var totalPages = (int)Math.Ceiling((double)totalPeople / pageSize);
 
-                var result = new PaginationRequestPerson<Person>(pagingModel, page, totalPages);
+                var result = new Pagination<Person>(pagingModel, page, totalPages);
 
-                return new Return<PaginationRequestPerson<Person>>(result);
+                return new Return<Pagination<Person>>(result);
             }
             catch (Exception ex)
             {
-                return new Return<PaginationRequestPerson<Person>>("Error" + ex.Message);
+                return new Return<Pagination<Person>>("Error" + ex.Message);
             }
         }
     }

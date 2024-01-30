@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using UserAuthenticationAPI.DbContextRepository;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
-using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
+using UserAuthenticationAPI.DbContextRepository.Models.People;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
 
@@ -124,33 +125,30 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<PaginationRequestGroup> GetAllGroups(int page)
+        public Return<Pagination<Group>> GetAllGroups(int page, int pageSize)
         {
             try
             {
                 if (_dbContext.Groups == null)
-                    return new Return<PaginationRequestGroup>("Error");
+                    return new Return<Pagination<Group>>("Error");
 
-                var pageResults = 3f;
-                var pageCount = Math.Ceiling(_dbContext.Groups.Count() / pageResults);
 
-                var groups = _dbContext.Groups
-                    .Skip((page - 1) * (int)pageResults)
-                    .Take((int)pageResults)
-                    .ToList();
+                var pagingModel = _dbContext.Groups
+                .OrderBy(n => n.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-                var result = new PaginationRequestGroup
-                {
-                    Groups = groups,
-                    CurrentPage = page,
-                    Pages = (int)pageCount
-                };
+                var totalGroups = _dbContext.People.Count();
+                var totalPages = (int)Math.Ceiling((double)totalGroups / pageSize);
 
-                return new Return<PaginationRequestGroup>(result);
+                var result = new Pagination<Group>(pagingModel, page, totalPages);
+
+                return new Return<Pagination<Group>>(result);
             }
             catch (Exception ex)
             {
-                return new Return<PaginationRequestGroup>("Error" + ex.Message);
+                return new Return<Pagination<Group>>("Error" + ex.Message);
             }
         }
     }

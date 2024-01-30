@@ -1,6 +1,7 @@
 ﻿using UserAuthenticationAPI.DbContextRepository.Models.Users;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using Microsoft.AspNetCore.Mvc;
+using UserAuthenticationAPI.DbContextRepository;
 
 namespace UserAuthenticationAPI.Services.Interfaces
 {
@@ -10,6 +11,6 @@ namespace UserAuthenticationAPI.Services.Interfaces
         Return<bool> RegistrationUserRequest(RegistrationUser registrationUser);
         Return<bool> UpdateUserRequest(UpdateUser updateUser);
         Return<bool> RemoveUserRequest(int id);
-        Return<List<User?>> GetAllUsers();
+        Return<Pagination<User>> GetAllUsers(int page, int pageSize);
     }
 }

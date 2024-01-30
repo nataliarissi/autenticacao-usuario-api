@@ -6,6 +6,8 @@ using UserAuthenticationAPI.DbContextRepository.Models.People;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
+using Microsoft.EntityFrameworkCore;
+using UserAuthenticationAPI.DbContextRepository;
 
 namespace UserAuthenticationAPI.Services.Implementations
 {
@@ -71,7 +73,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 User user = new User();
 
-                if (user.UserLogin == updateUser.UserLogin)
+                if (user.UserLogin == updateUser.UserLogin && user.Id != updateUser.Id)
                     return new Return<bool>("This login already exists");
 
                 user.UserLogin = updateUser.UserLogin;
@@ -117,17 +119,29 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<List<User?>> GetAllUsers()
+        public Return<Pagination<User>> GetAllUsers(int page, int pageSize)
         {
             try
             {
-                var queryAllUsers = _dbContext.Users.ToList();
+                if (_dbContext.Users == null)
+                    return new Return<Pagination<User>>("Error");
 
-                return new Return<List<User?>>(queryAllUsers);
+                var pagingModel = _dbContext.Users
+                .OrderBy(n => n.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+                var totalUsers = _dbContext.People.Count();
+                var totalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+
+                var result = new Pagination<User>(pagingModel, page, totalPages);
+
+                return new Return<Pagination<User>>(result);
             }
             catch (Exception ex)
             {
-                return new Return<List<User?>>("Error" + ex.Message);
+                return new Return<Pagination<User>>("Error" + ex.Message);
             }
         }
     }

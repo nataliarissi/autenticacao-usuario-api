@@ -25,12 +25,6 @@ namespace UserAuthenticationAPI.UserDbContext
         {
             optionsBuilder.UseSqlServer(@"Data Source=.;Initial Catalog=USERMANAGEMENT;User ID=sa;Password=Natalia@123; TrustServerCertificate=True");
         }
-        //    protected override void OnConfiguring(DbContextOptionsBuilder options)
-        //=> options.UseSqlServer("USERMANAGEMENT");
-
-        //        "ConnectionStrings": {
-        //  "USERMANAGEMENT": "Data Source=.;Initial Catalog=USERMANAGEMENT;User ID=sa;Password=Natalia@123"
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
