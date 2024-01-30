@@ -54,7 +54,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when registering the user");
 
                 return new Return<bool>(queryResult > 0);
@@ -81,7 +81,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when updating the user");
 
                 return new Return<bool>(queryResult > 0);
@@ -98,14 +98,14 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 var user = _dbContext.Users.FirstOrDefault(x => x.Id == id);
 
-                if (user == null)
+                if (id <= 0)
                     return new Return<bool>("ID not found");
 
                 _dbContext.Users.Remove(user);
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when removing the user");
 
                 return new Return<bool>(true);

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
+using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
 using UserAuthenticationAPI.Services.Interfaces;
 
 namespace UserAuthenticationAPI.Controllers
@@ -44,7 +45,7 @@ namespace UserAuthenticationAPI.Controllers
         }
 
         [HttpGet]
-        public Return<Pagination> GetAllGroups(int page)
+        public Return<PaginationRequestGroup> GetAllGroups(int page)
         {
             return _groupService.GetAllGroups(page);
         }

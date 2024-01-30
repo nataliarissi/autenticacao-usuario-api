@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
+using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
 
@@ -123,12 +124,12 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<Pagination> GetAllGroups(int page)
+        public Return<PaginationRequestGroup> GetAllGroups(int page)
         {
             try
             {
                 if (_dbContext.Groups == null)
-                    return new Return<Pagination>("Error");
+                    return new Return<PaginationRequestGroup>("Error");
 
                 var pageResults = 3f;
                 var pageCount = Math.Ceiling(_dbContext.Groups.Count() / pageResults);
@@ -138,18 +139,18 @@ namespace UserAuthenticationAPI.Services.Implementations
                     .Take((int)pageResults)
                     .ToList();
 
-                var result = new Pagination
+                var result = new PaginationRequestGroup
                 {
                     Groups = groups,
                     CurrentPage = page,
                     Pages = (int)pageCount
                 };
 
-                return new Return<Pagination>(result);
+                return new Return<PaginationRequestGroup>(result);
             }
             catch (Exception ex)
             {
-                return new Return<Pagination>("Error" + ex.Message);
+                return new Return<PaginationRequestGroup>("Error" + ex.Message);
             }
         }
     }

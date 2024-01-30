@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
+using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
 
 namespace UserAuthenticationAPI.Services.Interfaces
 {
@@ -10,6 +11,6 @@ namespace UserAuthenticationAPI.Services.Interfaces
         Return<bool> RegistrationGroupRequest(RegistrationGroup registrationGroup);
         Return<bool> UpdateGroupRequest(UpdateGroup updateGroup);
         Return<bool> RemoveGroupRequest(int id);
-        Return<Pagination> GetAllGroups(int page);
+        Return<PaginationRequestGroup> GetAllGroups(int page);
     }
 }

@@ -5,6 +5,7 @@ using UserAuthenticationAPI.UserDbContext;
 using Microsoft.AspNetCore.Mvc;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
 using Microsoft.EntityFrameworkCore;
+using UserAuthenticationAPI.DbContextRepository.Models.Pagination;
 
 namespace UserAuthenticationAPI.Services.Implementations
 {
@@ -37,12 +38,22 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                var personExists = _dbContext.People.Any(person => person.Name == registrationPerson.Name);
+                Person person = new Person();
+
+                var personExists = _dbContext.People.Any(person => person.Cpf == registrationPerson.Cpf);
 
                 if (personExists)
-                    return new Return<bool>("Person with the same name already exists");
+                    return new Return<bool>("Person with the same CPF already exists");
 
-                Person person = new Person();
+                var emailExists = _dbContext.People.Any(person => person.Email == registrationPerson.Email);
+
+                if (emailExists)
+                    return new Return<bool>("Person with the same email already exists");
+
+                var numberExists = _dbContext.People.Any(person => person.Number == registrationPerson.Number);
+
+                if (numberExists)
+                    return new Return<bool>("Person with the same phone number already exists");
 
                 person.Name = registrationPerson.Name;
                 person.Cpf = registrationPerson.Cpf;
@@ -54,7 +65,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when registering the person");
 
                 return new Return<bool>(queryResult > 0);
@@ -71,9 +82,22 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Person person = new Person();
 
-                if (person.Name == updatePerson.Name)
-                    return new Return<bool>("Person with the same name already exists");
+                var CpfExists = _dbContext.Groups.Any(person => person.Id == updatePerson.Id);
 
+                if (CpfExists)
+                    return new Return<bool>("Person with the same Id already exists");
+
+                var emailExists = _dbContext.People.Any(person => person.Email == updatePerson.Email && person.Id != updatePerson.Id);
+
+                if (emailExists)
+                    return new Return<bool>("Person with the same email already exists");
+
+                var numberExists = _dbContext.People.Any(person => person.Number == updatePerson.Number && person.Id != updatePerson.Id);
+
+                if (numberExists)
+                    return new Return<bool>("Person with the same phone number already exists");
+
+                person.Id = updatePerson.Id;
                 person.Name = updatePerson.Name;
                 person.Email = updatePerson.Email;
                 person.DDD = updatePerson.DDD;
@@ -83,7 +107,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when updating the person");
 
                 return new Return<bool>(queryResult > 0);
@@ -100,14 +124,14 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 var person = _dbContext.People.FirstOrDefault(x => x.Id == id);
 
-                if (person == null)
+                if (id <= 0)
                     return new Return<bool>("ID not found");
 
                 _dbContext.People.Remove(person);
 
                 var queryResult = _dbContext.SaveChanges();
 
-                if (queryResult > 0)
+                if (queryResult <= 0)
                     return new Return<bool>("Error when removing the person");
 
                 return new Return<bool>(true);
@@ -119,17 +143,26 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<List<Person?>> GetAllPeople()
+        public Return<PaginationRequestPerson<Person>> GetAllPeople(int page, int pageSize)
         {
             try
             {
-                var queryAllPeople = _dbContext.People.ToList();
+                var pagingModel = _dbContext.People
+                .OrderBy(n => n.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-                return new Return<List<Person?>>(queryAllPeople);
+                var totalPeople= _dbContext.People.Count();
+                var totalPages = (int)Math.Ceiling((double)totalPeople / pageSize);
+
+                var result = new PaginationRequestPerson<Person>(pagingModel, page, totalPages);
+
+                return new Return<PaginationRequestPerson<Person>>(result);
             }
             catch (Exception ex)
             {
-                return new Return<List<Person?>>("Error" + ex.Message);
+                return new Return<PaginationRequestPerson<Person>>("Error" + ex.Message);
             }
         }
     }
