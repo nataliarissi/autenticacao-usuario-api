@@ -51,7 +51,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var groupExists = _dbContext.Groups.Any(group => group.Name == registrationGroup.Name);
 
-                if (groupExists)
+                if (!groupExists)
                 {
                     throw new Exception("Test exception");
                 }
@@ -83,21 +83,18 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var idExists = _dbContext.Groups.Any(n => n.Id == updateGroup.Id);
 
+                if (!idExists)
+                {
+                    _logger.LogError("It's not possible to update the group ID: {id}", updateGroup.Id);
+                    return new Return<bool>("Please try again later");
+                }
+
                 var nameAlreadyRegistered = _dbContext.Groups.Any(n => n.Name == updateGroup.Name && n.Id != updateGroup.Id);
 
-                if (idExists)
+                if (!nameAlreadyRegistered)
                 {
-                    throw new Exception("Test exception");
-                }
-
-                if (nameAlreadyRegistered)
-                {
-                    throw new ArgumentException("Test exception");
-                }
-
-                if (idExists && nameAlreadyRegistered)
-                {
-                    throw new ArgumentException("Test exception");
+                    _logger.LogError("It's not possible to update the group name: {name}", updateGroup.Name);
+                    return new Return<bool>("Please try again later"); 
                 }
 
                 group.Id = updateGroup.Id;
@@ -109,19 +106,14 @@ namespace UserAuthenticationAPI.Services.Implementations
                 var queryResult = _dbContext.SaveChanges();
 
                 if (queryResult <= 0)
-                    return new Return<bool>("Error when updating the group");
+                    return new Return<bool>("Error when updating the group"); //!
 
                 return new Return<bool>(queryResult > 0);
             }
-            catch (ArgumentException ex)
-            {
-                _logger.LogError(ex, "It's not possible to update the group name: {name}", updateGroup.Name);
-                return new Return<bool>("Error while updating group by name");
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "It's not possible to update the group ID: {id}", updateGroup.Id);
-                return new Return<bool>("Error while updating group by ID");
+                _logger.LogError(ex, "Error while updating the group {id} {name}", updateGroup.Id, updateGroup.Name);
+                return new Return<bool>("Error");
             }
         }
 
