@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using UserAuthenticationAPI.DbContextRepository;
 using UserAuthenticationAPI.DbContextRepository.Models;
@@ -14,9 +15,12 @@ namespace UserAuthenticationAPI.Services.Implementations
     public class GroupsService : IGroupsService
     {
         private readonly AuthenticationDbContext _dbContext;
-        public GroupsService(AuthenticationDbContext dbContext)
+        private readonly ILogger<GroupsService> _logger;
+        public GroupsService(AuthenticationDbContext dbContext, ILogger<GroupsService> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
+
         }
 
         public Return<Group?> GetCompleteGroupById(int id)
@@ -26,13 +30,16 @@ namespace UserAuthenticationAPI.Services.Implementations
                 Group? group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
 
                 if (group == null)
-                    return new Return<Group?>("ID does not exist");
+                {
+                    throw new Exception("Test exception");
+                }
 
                 return new Return<Group?>(group);
             }
             catch (Exception ex)
             {
-                return new Return<Group?>("Error" + ex.Message);
+                _logger.LogError(ex, "Error when searching for an ID. Searched ID: {id}", id);
+                return new Return<Group?>("Error while getting group by ID");
             }
         }
 
@@ -40,12 +47,14 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
+                Group group = new Group();
+
                 var groupExists = _dbContext.Groups.Any(group => group.Name == registrationGroup.Name);
 
                 if (groupExists)
-                    return new Return<bool>("Group with the same name already exists");
-
-                Group group = new Group();
+                {
+                    throw new Exception("Test exception");
+                }
 
                 group.Name = registrationGroup.Name;
                 group.Description = registrationGroup.Description;
@@ -61,7 +70,8 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
             catch (Exception ex)
             {
-                return new Return<bool>("Error" + ex.Message);
+                _logger.LogError(ex, "It was not possible to locate the group name: {name}", registrationGroup.Name);
+                return new Return<bool>("Error while getting group by name");
             }
         }
 
@@ -71,15 +81,24 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Group group = new Group();
 
-                var idExists = _dbContext.Groups.Any(i => i.Id == updateGroup.Id);
-
-                if(!idExists)
-                    return new Return<bool>("Id does not exist");
+                var idExists = _dbContext.Groups.Any(n => n.Id == updateGroup.Id);
 
                 var nameAlreadyRegistered = _dbContext.Groups.Any(n => n.Name == updateGroup.Name && n.Id != updateGroup.Id);
 
+                if (idExists)
+                {
+                    throw new Exception("Test exception");
+                }
+
                 if (nameAlreadyRegistered)
-                    return new Return<bool>("Group with the same name already exists");
+                {
+                    throw new ArgumentException("Test exception");
+                }
+
+                if (idExists && nameAlreadyRegistered)
+                {
+                    throw new ArgumentException("Test exception");
+                }
 
                 group.Id = updateGroup.Id;
                 group.Name = updateGroup.Name;
@@ -94,9 +113,15 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 return new Return<bool>(queryResult > 0);
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "It's not possible to update the group name: {name}", updateGroup.Name);
+                return new Return<bool>("Error while updating group by name");
+            }
             catch (Exception ex)
             {
-                return new Return<bool>("Error" + ex.Message);
+                _logger.LogError(ex, "It's not possible to update the group ID: {id}", updateGroup.Id);
+                return new Return<bool>("Error while updating group by ID");
             }
         }
 
@@ -131,7 +156,6 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 if (_dbContext.Groups == null)
                     return new Return<Pagination<Group>>("Error");
-
 
                 var pagingModel = _dbContext.Groups
                 .OrderBy(n => n.Id)
