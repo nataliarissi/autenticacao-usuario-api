@@ -2,9 +2,6 @@
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
-using Microsoft.AspNetCore.Mvc;
-using UserAuthenticationAPI.DbContextRepository.Models.Groups;
-using Microsoft.EntityFrameworkCore;
 using UserAuthenticationAPI.DbContextRepository;
 
 namespace UserAuthenticationAPI.Services.Implementations

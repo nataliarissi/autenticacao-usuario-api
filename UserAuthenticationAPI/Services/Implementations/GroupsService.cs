@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using UserAuthenticationAPI.DbContextRepository;
+﻿using UserAuthenticationAPI.DbContextRepository;
 using UserAuthenticationAPI.DbContextRepository.Models;
 using UserAuthenticationAPI.DbContextRepository.Models.Groups;
-using UserAuthenticationAPI.DbContextRepository.Models.People;
 using UserAuthenticationAPI.Services.Interfaces;
 using UserAuthenticationAPI.UserDbContext;
 
@@ -27,11 +21,12 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                Group? group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
+                Group? group = _dbContext.Groups.FirstOrDefault(group => group.Id == id);
 
                 if (group == null)
                 {
-                    throw new Exception("Test exception");
+                    _logger.LogError("It's not possible to update the group ID: {id}", id);
+                    return new Return<Group?>("Error when searching for the group by ID, please try again later");
                 }
 
                 return new Return<Group?>(group);
@@ -51,9 +46,10 @@ namespace UserAuthenticationAPI.Services.Implementations
 
                 var groupExists = _dbContext.Groups.Any(group => group.Name == registrationGroup.Name);
 
-                if (!groupExists)
+                if (groupExists)
                 {
-                    throw new Exception("Test exception");
+                    _logger.LogError("The group does not exist", registrationGroup.Name);
+                    return new Return<bool>("Error when searching for the group by ID, please try again later");
                 }
 
                 group.Name = registrationGroup.Name;
@@ -64,7 +60,10 @@ namespace UserAuthenticationAPI.Services.Implementations
                 var queryResult = _dbContext.SaveChanges();
 
                 if (queryResult <= 0)
+                {
+                    _logger.LogError("It was not possible to register the group", queryResult);
                     return new Return<bool>("Error when registering the group");
+                }
 
                 return new Return<bool>(queryResult > 0);
             }
@@ -81,7 +80,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             {
                 Group group = new Group();
 
-                var idExists = _dbContext.Groups.Any(n => n.Id == updateGroup.Id);
+                var idExists = _dbContext.Groups.Any(group => group.Id == updateGroup.Id);
 
                 if (!idExists)
                 {
@@ -89,9 +88,9 @@ namespace UserAuthenticationAPI.Services.Implementations
                     return new Return<bool>("Please try again later");
                 }
 
-                var nameAlreadyRegistered = _dbContext.Groups.Any(n => n.Name == updateGroup.Name && n.Id != updateGroup.Id);
+                var nameAlreadyRegistered = _dbContext.Groups.Any(group => group.Name == updateGroup.Name && group.Id != updateGroup.Id);
 
-                if (!nameAlreadyRegistered)
+                if (nameAlreadyRegistered)
                 {
                     _logger.LogError("It's not possible to update the group name: {name}", updateGroup.Name);
                     return new Return<bool>("Please try again later"); 
@@ -106,8 +105,10 @@ namespace UserAuthenticationAPI.Services.Implementations
                 var queryResult = _dbContext.SaveChanges();
 
                 if (queryResult <= 0)
-                    return new Return<bool>("Error when updating the group"); //!
-
+                {
+                    _logger.LogError("It's not possible to update the group", queryResult);
+                    return new Return<bool>("It was not possible to save the changes to the group");
+                }
                 return new Return<bool>(queryResult > 0);
             }
             catch (Exception ex)
@@ -121,24 +122,29 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                 var group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
+                var group = _dbContext.Groups.FirstOrDefault(x => x.Id == id);
 
-                if (id <= 0)
-                    return new Return<bool>("ID not found");
+                if (group == null)
+                {
+                    _logger.LogError("It's not possible to remove the group ID: {id}", id);
+                    return new Return<bool>("ID not found, please try again later");
+                }
 
                 _dbContext.Groups.Remove(group);
 
                 var queryResult = _dbContext.SaveChanges();
 
                 if (queryResult <= 0)
+                {
+                    _logger.LogError("It's not possible to remove the group", queryResult);
                     return new Return<bool>("Error when removing the group");
-
-                return new Return<bool>(true);
-
+                }
+                return new Return<bool>(queryResult > 0);
             }
             catch (Exception ex)
             {
-                return new Return<bool>("Error" + ex.Message);
+                _logger.LogError(ex, "Error while removing the group {id}", id);
+                return new Return<bool>("Error");
             }
         }
 
@@ -146,10 +152,7 @@ namespace UserAuthenticationAPI.Services.Implementations
         {
             try
             {
-                if (_dbContext.Groups == null)
-                    return new Return<Pagination<Group>>("Error");
-
-                var pagingModel = _dbContext.Groups
+                 var pagingModel = _dbContext.Groups
                 .OrderBy(n => n.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -164,7 +167,8 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
             catch (Exception ex)
             {
-                return new Return<Pagination<Group>>("Error" + ex.Message);
+                _logger.LogError(ex, "Error while locating all groups.");
+                return new Return<Pagination<Group>>("Error");
             }
         }
     }
