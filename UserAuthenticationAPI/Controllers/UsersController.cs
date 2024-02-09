@@ -22,7 +22,7 @@ namespace UserAuthenticationAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public Return<User?> GetCompleteUserById(int id)
+        public Return<User?> GetCompleteUserById(Guid id)
         {
             return _userService.GetCompleteUserById(id);
         }
@@ -40,7 +40,7 @@ namespace UserAuthenticationAPI.Controllers
         }
 
         [HttpDelete]
-        public Return<bool> RemoveUserRequest(int id)
+        public Return<bool> RemoveUserRequest(Guid id)
         {
             return _userService.RemoveUserRequest(id);
 

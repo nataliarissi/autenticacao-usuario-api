@@ -17,7 +17,7 @@ namespace UserAuthenticationAPI.Services.Implementations
 
         }
 
-        public Return<Group?> GetCompleteGroupById(int id)
+        public Return<Group?> GetCompleteGroupById(Guid id)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<bool> RemoveGroupRequest(int id)
+        public Return<bool> RemoveGroupRequest(Guid id)
         {
             try
             {

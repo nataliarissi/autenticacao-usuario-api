@@ -7,10 +7,10 @@ namespace UserAuthenticationAPI.Services.Interfaces
 {
     public interface IUsersService
     {
-        Return<User?> GetCompleteUserById(int id);
+        Return<User?> GetCompleteUserById(Guid id);
         Return<bool> RegistrationUserRequest(RegistrationUser registrationUser);
         Return<bool> UpdateUserRequest(UpdateUser updateUser);
-        Return<bool> RemoveUserRequest(int id);
+        Return<bool> RemoveUserRequest(Guid id);
         Return<Pagination<User>> GetAllUsers(int page, int pageSize);
     }
 }

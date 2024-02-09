@@ -20,7 +20,7 @@ namespace UserAuthenticationAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public Return<Group?> GetCompleteGroupById(int id)
+        public Return<Group?> GetCompleteGroupById(Guid id)
         {
             return _groupService.GetCompleteGroupById(id);
         }
@@ -38,7 +38,7 @@ namespace UserAuthenticationAPI.Controllers
         }
 
         [HttpDelete]
-        public Return<bool> RemoveGroupRequest(int id)
+        public Return<bool> RemoveGroupRequest(Guid id)
         {
             return _groupService.RemoveGroupRequest(id);
 

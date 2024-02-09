@@ -7,10 +7,10 @@ namespace UserAuthenticationAPI.Services.Interfaces
 {
     public interface IGroupsService
     {
-        Return<Group?> GetCompleteGroupById(int id);
+        Return<Group?> GetCompleteGroupById(Guid id);
         Return<bool> RegistrationGroupRequest(RegistrationGroup registrationGroup);
         Return<bool> UpdateGroupRequest(UpdateGroup updateGroup);
-        Return<bool> RemoveGroupRequest(int id);
+        Return<bool> RemoveGroupRequest(Guid id);
         Return<Pagination<Group>> GetAllGroups(int page, int pageSize);
     }
 }

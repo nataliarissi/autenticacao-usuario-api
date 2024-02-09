@@ -14,7 +14,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             _dbContext = dbContext;
         }
 
-        public Return<User?> GetCompleteUserById(int id)
+        public Return<User?> GetCompleteUserById(Guid id)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace UserAuthenticationAPI.Services.Implementations
             }
         }
 
-        public Return<bool> RemoveUserRequest(int id)
+        public Return<bool> RemoveUserRequest(Guid id)
         {
             try
             {

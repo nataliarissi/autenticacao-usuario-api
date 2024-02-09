@@ -8,10 +8,10 @@ namespace UserAuthenticationAPI.Services.Interfaces
 {
     public interface IPeopleService
     {
-        Return<Person?> GetCompletePeopleById(int id);
+        Return<Person?> GetCompletePeopleById(Guid id);
         Return<bool> RegistrationPersonRequest(RegistrationPerson registrationPerson);
         Return<bool> UpdatePersonRequest(UpdatePerson updatePerson);
-        Return<bool> RemovePersonRequest(int id);
+        Return<bool> RemovePersonRequest(Guid id);
         Return<Pagination<Person>> GetAllPeople(int page, int pageSize);
     }
 }
